@@ -1,0 +1,175 @@
+{
+  "utilisateurs": [
+    {
+      "id": 1,
+      "nom": "Shammah Ndjibu",
+      "email": "shammah@primetek.cd",
+      "motDePasse": "1234"
+    }
+  ],
+  "projets": [
+    {
+      "id": 1,
+      "utilisateurId": 1,
+      "nom": "Site vitrine Nguvu",
+      "description": "Refonte complète du site institutionnel de l'agence.",
+      "couleur": "#21C7A5",
+      "creeLe": "2026-09-01"
+    },
+    {
+      "id": 2,
+      "utilisateurId": 1,
+      "nom": "TaskFlow",
+      "description": "Application de gestion de projets en React.",
+      "couleur": "#2563EB",
+      "creeLe": "2026-09-03"
+    },
+    {
+      "id": 3,
+      "utilisateurId": 1,
+      "nom": "AV Connect",
+      "description": "Plateforme de diffusion pour les événements.",
+      "couleur": "#7C3AED",
+      "creeLe": "2026-09-05"
+    },
+    {
+      "id": 4,
+      "utilisateurId": 1,
+      "nom": "Momentum Sim",
+      "description": "Site du centre de simulation médicale.",
+      "couleur": "#EA580C",
+      "creeLe": "2026-09-08"
+    },
+    {
+      "id": 5,
+      "utilisateurId": 1,
+      "nom": "Portfolio Personnel",
+      "description": "Portfolio développeur et designer.",
+      "couleur": "#0EA5E9",
+      "creeLe": "2026-09-10"
+    }
+  ],
+  "taches": [
+    {
+      "id": 1,
+      "projetId": 1,
+      "titre": "Intégrer le formulaire de contact",
+      "description": "Validation des champs obligatoires et envoi.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-12",
+      "creeLe": "2026-09-02",
+      "modifieLe": "2026-09-04"
+    },
+    {
+      "id": 2,
+      "projetId": 1,
+      "titre": "Créer la page Accueil",
+      "description": "Mettre en place la structure Hero.",
+      "statut": "terminee",
+      "priorite": "moyenne",
+      "echeance": "2026-09-06",
+      "creeLe": "2026-09-01",
+      "modifieLe": "2026-09-06"
+    },
+    {
+      "id": 3,
+      "projetId": 1,
+      "titre": "Optimiser le SEO",
+      "description": "Ajouter les balises meta.",
+      "statut": "a_faire",
+      "priorite": "moyenne",
+      "echeance": "2026-09-18",
+      "creeLe": "2026-09-05",
+      "modifieLe": "2026-09-05"
+    },
+    {
+      "id": 4,
+      "projetId": 2,
+      "titre": "Créer le Dashboard",
+      "description": "Construire la page principale.",
+      "statut": "terminee",
+      "priorite": "haute",
+      "echeance": "2026-09-08",
+      "creeLe": "2026-09-03",
+      "modifieLe": "2026-09-08"
+    },
+    {
+      "id": 5,
+      "projetId": 2,
+      "titre": "Ajouter React Router",
+      "description": "Mettre en place la navigation.",
+      "statut": "terminee",
+      "priorite": "haute",
+      "echeance": "2026-09-07",
+      "creeLe": "2026-09-03",
+      "modifieLe": "2026-09-07"
+    },
+    {
+      "id": 6,
+      "projetId": 2,
+      "titre": "Créer la modale Nouvelle tâche",
+      "description": "Créer un formulaire réutilisable.",
+      "statut": "en_cours",
+      "priorite": "moyenne",
+      "echeance": "2026-09-15",
+      "creeLe": "2026-09-09",
+      "modifieLe": "2026-09-10"
+    },
+    {
+      "id": 7,
+      "projetId": 3,
+      "titre": "Créer le logo",
+      "description": "Finaliser la version officielle.",
+      "statut": "terminee",
+      "priorite": "basse",
+      "echeance": "2026-09-04",
+      "creeLe": "2026-09-02",
+      "modifieLe": "2026-09-04"
+    },
+    {
+      "id": 8,
+      "projetId": 3,
+      "titre": "Préparer les packs de services",
+      "description": "Définir Start, Standard et Pro.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-16",
+      "creeLe": "2026-09-06",
+      "modifieLe": "2026-09-11"
+    },
+    {
+      "id": 9,
+      "projetId": 4,
+      "titre": "Créer la maquette Figma",
+      "description": "Concevoir l'interface.",
+      "statut": "terminee",
+      "priorite": "moyenne",
+      "echeance": "2026-09-10",
+      "creeLe": "2026-09-08",
+      "modifieLe": "2026-09-10"
+    },
+    {
+      "id": 10,
+      "projetId": 4,
+      "titre": "Développer la page Formations",
+      "description": "Afficher les différents modules.",
+      "statut": "a_faire",
+      "priorite": "haute",
+      "echeance": "2026-09-20",
+      "creeLe": "2026-09-09",
+      "modifieLe": "2026-09-09"
+    },
+    {
+      "id": 11,
+      "projetId": 5,
+      "titre": "Ajouter la section Projets",
+      "description": "Présenter les réalisations.",
+      "statut": "en_cours",
+      "priorite": "moyenne",
+      "echeance": "2026-09-22",
+      "creeLe": "2026-09-10",
+      "modifieLe": "2026-09-11"
+    }
+  ]
+}
