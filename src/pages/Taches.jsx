@@ -1,7 +1,16 @@
-import { Search, SlidersHorizontal, ClipboardList, Clock, CircleCheck, AlertCircle } from "lucide-react";
+import {
+  Search,
+  SlidersHorizontal,
+  ClipboardList,
+  Clock,
+  CircleCheck,
+  AlertCircle,
+} from "lucide-react";
 
 import { useEffect, useRef, useState } from "react";
+
 import TableauTache from "../components/TableauTache";
+import TacheModal from "../components/TacheModal";
 
 const taches = [
   {
@@ -10,7 +19,10 @@ const taches = [
     projet: "Site vitrine Nguvu",
     priorite: "haute",
     echeance: "12 Sept. 2026",
-    statut: "en_cours"
+    statut: "en_cours",
+    description: "Créer le formulaire de contact.",
+    creeLe: "02 Sept. 2026",
+    modifieLe: "04 Sept. 2026",
   },
   {
     id: 2,
@@ -18,7 +30,10 @@ const taches = [
     projet: "Portfolio",
     priorite: "moyenne",
     echeance: "15 Sept. 2026",
-    statut: "a_faire"
+    statut: "a_faire",
+    description: "Créer le Hero.",
+    creeLe: "05 Sept. 2026",
+    modifieLe: "05 Sept. 2026",
   },
   {
     id: 3,
@@ -26,27 +41,19 @@ const taches = [
     projet: "TaskFlow",
     priorite: "basse",
     echeance: "18 Sept. 2026",
-    statut: "terminee"
+    statut: "terminee",
+    description: "Corriger les bugs UI.",
+    creeLe: "08 Sept. 2026",
+    modifieLe: "09 Sept. 2026",
   },
-  {
-    id: 4,
-    titre: "Configurer l'authentification",
-    projet: "TaskFlow",
-    priorite: "haute",
-    echeance: "20 Sept. 2026",
-    statut: "en_cours"
-  },
-  {
-    id: 5,
-    titre: "Configurer l'authentification",
-    projet: "TaskFlow",
-    priorite: "haute",
-    echeance: "20 Sept. 2026",
-    statut: "a_faire"
-  }
 ];
 
-function TacheStatsCard({ icon: Icon, value, label, variant }) {
+function TacheStatsCard({
+  icon: Icon,
+  value,
+  label,
+  variant,
+}) {
   return (
     <div className="task-stat-card">
       <div className={`task-stat-icon ${variant}`}>
@@ -63,29 +70,38 @@ function TacheStatsCard({ icon: Icon, value, label, variant }) {
 
 export default function Taches() {
   const [filtreOuvert, setFiltreOuvert] = useState(false);
+
+  const [modal, setModal] = useState(null);
+
+  const [tacheSelectionnee, setTacheSelectionnee] = useState(null);
+
   const filtreRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    function handleClickOutside(event) {
       if (
         filtreRef.current &&
         !filtreRef.current.contains(event.target)
       ) {
         setFiltreOuvert(false);
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
 
     return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
   }, []);
 
   return (
     <div className="tasks-page">
-
       <header className="tasks-header">
-
         <div>
           <p className="dashboard-eyebrow">
             Gestion des tâches
@@ -94,37 +110,35 @@ export default function Taches() {
           <h1>Mes tâches</h1>
 
           <p>
-            Suivez et gérez toutes vos tâches.
+            Suivez toutes vos tâches.
           </p>
         </div>
 
-        <button className="btn btn-primary">
+        <button
+          className="btn btn-primary"
+          onClick={() =>
+            setModal("nouvelleTache")
+          }
+        >
           + Nouvelle tâche
         </button>
-
       </header>
 
-
       <div className="tasks-toolbar">
-
         <div className="project-search">
-
           <Search size={18} />
-
-          <input
-            placeholder="Rechercher une tâche..."
-          />
-
+          <input placeholder="Rechercher une tâche..." />
         </div>
 
         <div
           className="filter-wrapper"
           ref={filtreRef}
         >
-
           <button
             className="btn btn-secondary"
-            onClick={() => setFiltreOuvert(!filtreOuvert)}
+            onClick={() =>
+              setFiltreOuvert(!filtreOuvert)
+            }
           >
             <SlidersHorizontal size={18} />
             Filtrer
@@ -132,9 +146,7 @@ export default function Taches() {
 
           {filtreOuvert && (
             <div className="filter-popover">
-
               <div className="filter-section">
-
                 <label>Statut</label>
 
                 <select className="select">
@@ -142,41 +154,20 @@ export default function Taches() {
                   <option>À faire</option>
                   <option>En cours</option>
                   <option>Terminées</option>
-                  <option>En retard</option>
                 </select>
-
               </div>
-
-              <div className="filter-actions">
-
-                <button className="btn btn-ghost">
-                  Réinitialiser
-                </button>
-
-                <button className="btn btn-primary">
-                  Appliquer
-                </button>
-
-              </div>
-
             </div>
           )}
-
         </div>
-
-        <select className="select project-sort">
-          <option>Plus récentes</option>
-          <option>Plus anciennes</option>
-          <option>Priorité</option>
-          <option>Échéance</option>
-        </select>
-
       </div>
 
-
       <section className="tasks-stats-grid">
-
-        <TacheStatsCard icon={ClipboardList} value={12} label="À faire" variant="todo"/>
+        <TacheStatsCard
+          icon={ClipboardList}
+          value={12}
+          label="À faire"
+          variant="todo"
+        />
 
         <TacheStatsCard
           icon={Clock}
@@ -185,7 +176,12 @@ export default function Taches() {
           variant="progress"
         />
 
-        <TacheStatsCard icon={CircleCheck} value={18} label="Terminées" variant="success" />
+        <TacheStatsCard
+          icon={CircleCheck}
+          value={18}
+          label="Terminées"
+          variant="success"
+        />
 
         <TacheStatsCard
           icon={AlertCircle}
@@ -193,25 +189,40 @@ export default function Taches() {
           label="En retard"
           variant="danger"
         />
-
       </section>
-
 
       <section className="dashboard-card">
-
         <div className="card-header">
-
           <div>
             <h3>Liste des tâches</h3>
-            <p>Retrouvez toutes vos tâches.</p>
-          </div>
 
+            <p>
+              Cliquez sur une tâche.
+            </p>
+          </div>
         </div>
 
-        <TableauTache taches={taches} />
-
+        <TableauTache
+          taches={taches}
+          onOpenTask={setTacheSelectionnee}
+        />
       </section>
 
+      <TacheModal
+        tache={tacheSelectionnee}
+        projet={{
+          nom: tacheSelectionnee?.projet,
+        }}
+        onClose={() =>
+          setTacheSelectionnee(null)
+        }
+        onModifier={(t) =>
+          console.log("Modifier", t)
+        }
+        onSupprimer={(t) =>
+          console.log("Supprimer", t)
+        }
+      />
     </div>
   );
 }

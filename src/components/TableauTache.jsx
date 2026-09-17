@@ -1,37 +1,51 @@
-
 import { MoreVertical } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-function TableauTache({ tache }) {
+function LigneTache({
+  tache,
+  onOpenTask,
+}) {
   const [menuOuvert, setMenuOuvert] = useState(false);
 
   const menuRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    function handleClickOutside(event) {
       if (
         menuRef.current &&
         !menuRef.current.contains(event.target)
       ) {
         setMenuOuvert(false);
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
 
     return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
   }, []);
 
   return (
-    <tr>
-
-      <td>{tache.titre}</td>
+    <tr
+      className="task-row-clickable"
+      onClick={() => onOpenTask(tache)}
+    >
+      <td>
+        <strong>{tache.titre}</strong>
+      </td>
 
       <td>{tache.projet}</td>
 
       <td>
-        <span className={`badge badge-priority-${tache.priorite}`}>
+        <span
+          className={`badge badge-priority-${tache.priorite}`}
+        >
           {tache.priorite}
         </span>
       </td>
@@ -39,86 +53,80 @@ function TableauTache({ tache }) {
       <td>{tache.echeance}</td>
 
       <td>
-        <span className={`badge badge-status-${tache.statut}`}>
+        <span
+          className={`badge badge-status-${tache.statut}`}
+        >
           {tache.statut.replace("_", " ")}
         </span>
       </td>
 
       <td>
-
         <div
           className="project-menu-wrapper"
           ref={menuRef}
         >
-
           <button
             className="project-menu"
-            onClick={() => setMenuOuvert(!menuOuvert)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOuvert(!menuOuvert);
+            }}
           >
             <MoreVertical size={18} />
           </button>
 
           {menuOuvert && (
             <div className="project-menu-dropdown">
-
-              <button>Ouvrir</button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenTask(tache);
+                }}
+              >
+                Ouvrir
+              </button>
 
               <button>Modifier</button>
 
               <button className="danger">
                 Supprimer
               </button>
-
             </div>
           )}
-
         </div>
-
       </td>
-
     </tr>
   );
 }
 
-export default function TacheTable({ taches }) {
+export default function TableauTache({
+  taches,
+  onOpenTask,
+}) {
   return (
     <div className="table-wrapper">
-
       <table className="table task-table">
-
         <thead>
-
           <tr>
-
             <th>Tâche</th>
-
             <th>Projet</th>
-
             <th>Priorité</th>
-
             <th>Échéance</th>
-
             <th>Statut</th>
-
             <th></th>
-
           </tr>
-
         </thead>
 
         <tbody>
-
           {taches.map((tache) => (
-            <TableauTache
+            <LigneTache
               key={tache.id}
               tache={tache}
+              onOpenTask={onOpenTask}
             />
           ))}
-
         </tbody>
-
       </table>
-
     </div>
   );
 }

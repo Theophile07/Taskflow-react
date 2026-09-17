@@ -4,8 +4,11 @@ import DashboardCard from "../components/DashboardCard";
 import TacheProgressCard from "../components/TacheProgressCard";
 import ProjetAvancement from "../components/AvanceProjet";
 import TableauTacheRecent from "../components/TableauTacheRecent";
+import { useState } from "react";
+import Modals from "../components/Modals";
 
 export default function Dashboard(){
+    const [modal, setModal] = useState(null);
     return(
         <>
             <div className="dashboard">
@@ -16,39 +19,19 @@ export default function Dashboard(){
                         <p className="dashboard-description">Voici un aperçu de votre activité et de vos projets.</p>
                     </div>
 
-                    <button className="btn btn-primary">
+                    <button className="btn btn-primary" onClick={() => setModal("nouveauProjet")}>
                         + Nouveau projet
                     </button>
                 </header>
                 
                 <section className="stats-grid">
-                    <StatCard 
-                    icon={FolderKanban}
-                    label={"Projets"}
-                    value={12}
-                    variant="primary"
-                    />
+                    <StatCard  icon={FolderKanban} label={"Projets"} value={12} variant="primary" />
 
-                    <StatCard 
-                    icon={CheckSquare}
-                    label={"Tâches"}
-                    value={24}
-                    variant="blue"
-                    />
+                    <StatCard icon={CheckSquare} label={"Tâches"} value={24} variant="blue" />
 
-                    <StatCard 
-                    icon={CircleCheck}
-                    label={"Terminées"}
-                    value={5}
-                    variant="success"
-                    />
+                    <StatCard icon={CircleCheck} label={"Terminées"} value={5} variant="success" />
 
-                    <StatCard 
-                    icon={Clock}
-                    label={"En cours"}
-                    value={3}
-                    variant="warning"
-                    />
+                    <StatCard icon={Clock} label={"En cours"} value={3} variant="warning" />
 
                     <StatCard 
                     icon={AlertCircle}
@@ -96,7 +79,8 @@ export default function Dashboard(){
                     </DashboardCard>
 
                 </section>
-
+                
+                <Modals modal={modal} onClose={() => setModal(null)} />
 
             </div>
         </>
