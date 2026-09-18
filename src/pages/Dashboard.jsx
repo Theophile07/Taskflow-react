@@ -1,14 +1,92 @@
 import { FolderKanban, CheckSquare, CircleCheck, Clock, AlertCircle,} from "lucide-react";
+import { recupererProjet } from "../api/projets"
+import { recupererTache } from "../api/taches"
+
 import StatCard from "../components/StatCard";
 import DashboardCard from "../components/DashboardCard";
 import TacheProgressCard from "../components/TacheProgressCard";
 import ProjetAvancement from "../components/AvanceProjet";
 import TableauTacheRecent from "../components/TableauTacheRecent";
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Modals from "../components/Modals";
 
 export default function Dashboard(){
     const [modal, setModal] = useState(null);
+    const [projets, setProjets] = useState([])
+    const [taches, setTaches] = useState([])
+    const [chargement, setChargement] = useState(true)
+
+    const totalProjets = projets.length;
+    const totalTaches = taches.length;
+    
+    const tachesTerminees = useMemo(() => {
+    return taches.filter(
+        (tache) => tache.statut === "terminee"
+    ).length;
+    }, [taches]);
+
+
+    const tachesEnCours = useMemo(() => {
+    return taches.filter(
+        (tache) => tache.statut === "en_cours"
+    ).length;
+    }, [taches]);
+
+
+    const tachesEnRetard = useMemo(() => {
+    const aujourdHui = new Date().toISOString().split("T")[0];
+
+    return taches.filter(
+        (tache) =>
+        tache.echeance < aujourdHui &&
+        tache.statut !== "terminee"
+    ).length;
+    }, [taches]);
+
+    const tachesAFaire = useMemo(() => {
+    return taches.filter(
+        (tache) => tache.statut === "a_faire"
+    ).length;
+    }, [taches]);
+
+    const progressionGlobale = useMemo(() => {
+
+    if (totalTaches === 0) return 0;
+
+    return Math.round(
+        (tachesTerminees / totalTaches) * 100
+    );
+
+    }, [totalTaches, tachesTerminees]);
+
+    const tachesRecentes = useMemo(() => {
+    return [...taches]
+        .sort(
+        (a, b) =>
+            new Date(b.creeLe) - new Date(a.creeLe)
+        )
+        .slice(0, 5);
+    }, [taches]);
+
+    useEffect(() => {
+        async function chargerDashboard() {
+            try{
+                const [projetsData, tachesData] = await Promise.all([recupererProjet(),recupererTache()])
+                setProjets(projetsData)
+                setTaches(tachesData)
+            }catch (error){
+                console.error("Erreur Dashboard :", error)
+            }finally{
+                setChargement(false)
+            }
+        }
+        chargerDashboard()
+    }, [])
+    if(chargement){
+        return <p>Chargement du tableau de bord...</p>
+    }
+
+    
     return(
         <>
             <div className="dashboard">
@@ -25,25 +103,20 @@ export default function Dashboard(){
                 </header>
                 
                 <section className="stats-grid">
-                    <StatCard  icon={FolderKanban} label={"Projets"} value={12} variant="primary" />
+                    <StatCard  icon={FolderKanban} label={"Projets"} value={totalProjets} variant="primary" />
 
-                    <StatCard icon={CheckSquare} label={"Tâches"} value={24} variant="blue" />
+                    <StatCard icon={CheckSquare} label={"Tâches"} value={totalTaches} variant="blue" />
 
-                    <StatCard icon={CircleCheck} label={"Terminées"} value={5} variant="success" />
+                    <StatCard icon={CircleCheck} label={"Terminées"} value={tachesTerminees} variant="success" />
 
-                    <StatCard icon={Clock} label={"En cours"} value={3} variant="warning" />
+                    <StatCard icon={Clock} label={"En cours"} value={tachesEnCours} variant="warning" />
 
-                    <StatCard 
-                    icon={AlertCircle}
-                    label={"En retard"}
-                    value={2}
-                    variant="danger"
-                    />
+                    <StatCard icon={AlertCircle} label={"En retard"} value={tachesEnRetard} variant="danger" />
                 </section>
 
                 <section className="dashboard-content">
                     <DashboardCard titre = "Progression des tâches" description="Répartition de vos tâches par statut.">
-                        <TacheProgressCard/>
+                        <TacheProgressCard total={totalTaches} termine={tachesTerminees} enCours={tachesEnCours} aFaire={tachesAFaire} progression={progressionGlobale} />
                     </DashboardCard>
 
                     <DashboardCard titre="Avancement des projets" description="Suivez la progression de vos projets."
@@ -53,12 +126,24 @@ export default function Dashboard(){
                         </button>
                     }>
                         <div className="project-progress-list">
-
-                            <ProjetAvancement nom="Site vitrine Nguvu" progression={75} couleur="#21C7A5" />
-
-                            <ProjetAvancement nom="TaskFlow" progression={50} couleur="#2563EB" />
-
-                            <ProjetAvancement nom="Portfolio" progression={30} couleur="#F59E0B" />
+                
+                            {projets.map((projet) => {
+                                const tachesProjet = taches.filter(
+                                    (tache) => tache.projetId === Number(projet.id)
+                                )
+                                const progression = tachesProjet.length === 0 ? 0 :
+                                Math.round(
+                                    (tachesProjet.filter(
+                                        (tache) => tache.statut === "terminee"
+                                    ).length / tachesProjet.length) * 100
+                                )
+                                
+                                return(
+                                    <ProjetAvancement key={projet.id} nom={projet.nom} progression={progression} couleur={projet.couleur} />
+                                )
+                            }
+)
+                            }
 
                         </div>
 
@@ -75,7 +160,7 @@ export default function Dashboard(){
                         </button>
                         }
                     >
-                        <TableauTacheRecent />
+                        <TableauTacheRecent taches={tachesRecentes}/>
                     </DashboardCard>
 
                 </section>

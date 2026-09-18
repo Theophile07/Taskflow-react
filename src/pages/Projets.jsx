@@ -1,94 +1,38 @@
-import {
-  Plus,
-  Search,
-  SlidersHorizontal,
-  FolderKanban
-} from "lucide-react";
+import { Plus, Search, SlidersHorizontal, FolderKanban } from "lucide-react";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { recupererProjet } from "../api/projets"
+import { recupererTache } from "../api/taches"
 
 import CarteProjet from "../components/CarteProjet";
 import Modals from "../components/Modals";
 
 export default function Projets() {
 
-  /* =====================================================
-     PROJETS
-  ===================================================== */
-
-  const [projets] = useState([
-    {
-      id: 1,
-      nom: "Site vitrine Nguvu",
-      description:
-        "Création du site vitrine de Nguvu.",
-      couleur: "#21C7A5",
-      progression: 75,
-      totalTaches: 8,
-      tachesEnCours: 2,
-      echeance: "2026-09-20",
-      creeLe: "2026-09-01"
-    },
-
-    {
-      id: 2,
-      nom: "TaskFlow",
-      description:
-        "Application de gestion de projets et de tâches.",
-      couleur: "#2563EB",
-      progression: 50,
-      totalTaches: 12,
-      tachesEnCours: 4,
-      echeance: "2026-09-30",
-      creeLe: "2026-09-05"
-    },
-
-    {
-      id: 3,
-      nom: "Portfolio",
-      description:
-        "Création de mon portfolio professionnel.",
-      couleur: "#F59E0B",
-      progression: 30,
-      totalTaches: 6,
-      tachesEnCours: 3,
-      echeance: "2026-10-10",
-      creeLe: "2026-09-10"
-    }
-  ]);
-
+  const [projets, setProjets] = useState([])
+  const [chargement, setChargement] = useState(true)
+  const [taches, setTaches] = useState([])
   /* =====================================================
      RECHERCHE
   ===================================================== */
 
-  const [recherche, setRecherche] =
-    useState("");
+  const [recherche, setRecherche] = useState("");
 
   /* =====================================================
      FILTRE
   ===================================================== */
 
-  const [filtre, setFiltre] =
-    useState("tous");
-
-  /* =====================================================
-     TRI
-  ===================================================== */
-
-  const [tri, setTri] =
-    useState("recent");
+  const [filtre, setFiltre] = useState("tous");
+//  TRI
+  const [tri, setTri] = useState("recent");
 
   /* =====================================================
      MODALES
   ===================================================== */
 
-  const [modal, setModal] =
-    useState(null);
+  const [modal, setModal] = useState(null);
 
-  const [
-    projetSelectionne,
-    setProjetSelectionne
-  ] = useState(null);
+  const [ projetSelectionne, setProjetSelectionne ] = useState(null);
 
   /* =====================================================
      OUVRIR UN PROJET
@@ -221,37 +165,41 @@ export default function Projets() {
     }
 
     return resultat;
+  }, [projets, recherche, filtre, tri]);
 
-  }, [
-    projets,
-    recherche,
-    filtre,
-    tri
-  ]);
+
+  useEffect(() => {
+      async function chargerProjets() {
+        try{
+          const projetData = await recupererProjet()
+          const tachesData = await recupererTache()
+
+          setProjets(projetData)
+          setTaches(tachesData)
+        }catch (error){
+          console.error("Erreur :", error)
+        }finally{
+          setChargement(false)
+        }
+      }
+      chargerProjets()
+    }, [])
+    if(chargement){
+      return <p>Chargement des projets...</p>
+    }
 
   /* =====================================================
      RENDU
   ===================================================== */
-
+    
+    
   return (
     <div className="page">
-
-      {/* =================================================
-          HEADER
-      ================================================= */}
-
       <div className="page-header">
 
         <div>
-
-          <h1>
-            Mes projets
-          </h1>
-
-          <p>
-            Gérez et suivez l'avancement de vos projets.
-          </p>
-
+          <h1> Mes projets </h1>
+          <p> Gérez et suivez l'avancement de vos projets. </p>
         </div>
 
         <button
@@ -305,22 +253,11 @@ export default function Projets() {
                 event.target.value
               )
             }
-          >
-            <option value="tous">
-              Tous les projets
-            </option>
-
-            <option value="en_cours">
-              En cours
-            </option>
-
-            <option value="termine">
-              Terminés
-            </option>
-
-            <option value="en_retard">
-              En retard
-            </option>
+            >
+            <option value="tous"> Tous les projets </option>
+            <option value="en_cours"> En cours </option>
+            <option value="termine"> Terminés </option>
+            <option value="en_retard"> En retard </option>
           </select>
 
         </div>
@@ -381,11 +318,15 @@ export default function Projets() {
 
         <div className="projects-grid">
 
-          {projetsFiltres.map(
-            (projet) => (
+          {projetsFiltres.map((projet) => {
+            const tachesProjets = taches.filter(
+              (tache) => tache.projetId === projet.id
+            )
+            return(
               <CarteProjet
                 key={projet.id}
                 projet={projet}
+                taches={tachesProjets}
                 onOuvrir={handleOuvrir}
                 onModifier={handleModifier}
                 onSupprimer={
@@ -393,6 +334,7 @@ export default function Projets() {
                 }
               />
             )
+          }
           )}
 
         </div>

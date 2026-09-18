@@ -1,29 +1,12 @@
-import {
-  MoreVertical,
-  CheckSquare,
-  Clock
-} from "lucide-react";
-
+import { MoreVertical, CheckSquare, Clock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export default function CarteProjet({
-  projet,
-  onOuvrir,
-  onModifier,
-  onSupprimer
-}) {
+export default function CarteProjet({ projet, taches = [], onOuvrir, onModifier, onSupprimer }) {
+  console.log(projet.nom, taches)
   const [menuOuvert, setMenuOuvert] = useState(false);
   const menuRef = useRef(null);
 
-  const {
-    nom,
-    description,
-    couleur,
-    progression,
-    totalTaches,
-    tachesEnCours,
-    echeance
-  } = projet;
+  const { nom, description, couleur, totalTaches, tachesEnCours, echeance } = projet;
 
   /* =====================================================
      FERMER LE MENU EN CLIQUANT À L'EXTÉRIEUR
@@ -63,6 +46,16 @@ export default function CarteProjet({
       action(projet);
     }
   }
+  function calculProgress(taches){
+    if(taches.length === 0){
+      return 0
+    }
+    const tacheTerminees = taches.filter(
+      (tache) => tache.statut === "terminee"
+    )
+    return Math.round(tacheTerminees.length / taches.length) * 100
+  }
+  const progression = calculProgress(taches)
 
   return (
     <article className="project-card">
@@ -107,12 +100,7 @@ export default function CarteProjet({
           {menuOuvert && (
             <div className="project-menu-dropdown">
 
-              <button
-                type="button"
-                onClick={() =>
-                  handleAction(onOuvrir)
-                }
-              >
+              <button type="button" onClick={() => handleAction(onOuvrir) }>
                 Ouvrir
               </button>
 

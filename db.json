@@ -5,6 +5,18 @@
       "nom": "Shammah Ndjibu",
       "email": "shammah@primetek.cd",
       "motDePasse": "1234"
+    },
+    {
+      "id": 2,
+      "nom": "Sarah Mbuyi",
+      "email": "sarah@primetek.cd",
+      "motDePasse": "1234"
+    },
+    {
+      "id": 3,
+      "nom": "David Kalume",
+      "email": "david@primetek.cd",
+      "motDePasse": "1234"
     }
   ],
   "projets": [
@@ -47,6 +59,54 @@
       "description": "Portfolio développeur et designer.",
       "couleur": "#0EA5E9",
       "creeLe": "2026-09-10"
+    },
+    {
+      "id": 6,
+      "utilisateurId": 1,
+      "nom": "Application Formation",
+      "description": "Plateforme de gestion des formations en ligne.",
+      "couleur": "#16A34A",
+      "creeLe": "2026-09-11"
+    },
+    {
+      "id": 7,
+      "utilisateurId": 1,
+      "nom": "Campagne Digital 2026",
+      "description": "Campagne de communication digitale pour le quatrième trimestre.",
+      "couleur": "#DB2777",
+      "creeLe": "2026-09-12"
+    },
+    {
+      "id": 8,
+      "utilisateurId": 1,
+      "nom": "Refonte Application Mobile",
+      "description": "Amélioration UX/UI et développement de la nouvelle application mobile.",
+      "couleur": "#0891B2",
+      "creeLe": "2026-09-14"
+    },
+    {
+      "id": 9,
+      "utilisateurId": 2,
+      "nom": "Site E-commerce",
+      "description": "Création d'une boutique en ligne.",
+      "couleur": "#F97316",
+      "creeLe": "2026-09-06"
+    },
+    {
+      "id": 10,
+      "utilisateurId": 2,
+      "nom": "Identité visuelle",
+      "description": "Création du branding complet de la marque.",
+      "couleur": "#9333EA",
+      "creeLe": "2026-09-09"
+    },
+    {
+      "id": 11,
+      "utilisateurId": 3,
+      "nom": "Application RH",
+      "description": "Application interne de gestion des employés.",
+      "couleur": "#4F46E5",
+      "creeLe": "2026-09-07"
     }
   ],
   "taches": [
@@ -85,6 +145,28 @@
     },
     {
       "id": 4,
+      "projetId": 1,
+      "titre": "Optimiser les images",
+      "description": "Compresser les images et ajouter les attributs alt.",
+      "statut": "en_cours",
+      "priorite": "basse",
+      "echeance": "2026-09-19",
+      "creeLe": "2026-09-11",
+      "modifieLe": "2026-09-13"
+    },
+    {
+      "id": 5,
+      "projetId": 1,
+      "titre": "Tester la version mobile",
+      "description": "Vérifier le responsive sur plusieurs tailles d'écran.",
+      "statut": "a_faire",
+      "priorite": "haute",
+      "echeance": "2026-09-21",
+      "creeLe": "2026-09-12",
+      "modifieLe": "2026-09-12"
+    },
+    {
+      "id": 6,
       "projetId": 2,
       "titre": "Créer le Dashboard",
       "description": "Construire la page principale.",
@@ -95,7 +177,7 @@
       "modifieLe": "2026-09-08"
     },
     {
-      "id": 5,
+      "id": 7,
       "projetId": 2,
       "titre": "Ajouter React Router",
       "description": "Mettre en place la navigation.",
@@ -106,7 +188,7 @@
       "modifieLe": "2026-09-07"
     },
     {
-      "id": 6,
+      "id": 8,
       "projetId": 2,
       "titre": "Créer la modale Nouvelle tâche",
       "description": "Créer un formulaire réutilisable.",
@@ -117,7 +199,40 @@
       "modifieLe": "2026-09-10"
     },
     {
-      "id": 7,
+      "id": 9,
+      "projetId": 2,
+      "titre": "Créer le système de filtres",
+      "description": "Filtrer les tâches par statut et priorité.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-18",
+      "creeLe": "2026-09-12",
+      "modifieLe": "2026-09-14"
+    },
+    {
+      "id": 10,
+      "projetId": 2,
+      "titre": "Connecter le CRUD à l'API",
+      "description": "Connecter les composants React à json-server.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-20",
+      "creeLe": "2026-09-14",
+      "modifieLe": "2026-09-15"
+    },
+    {
+      "id": 11,
+      "projetId": 2,
+      "titre": "Ajouter la pagination",
+      "description": "Afficher les tâches par groupes de dix.",
+      "statut": "a_faire",
+      "priorite": "basse",
+      "echeance": "2026-09-25",
+      "creeLe": "2026-09-15",
+      "modifieLe": "2026-09-15"
+    },
+    {
+      "id": 12,
       "projetId": 3,
       "titre": "Créer le logo",
       "description": "Finaliser la version officielle.",
@@ -128,7 +243,7 @@
       "modifieLe": "2026-09-04"
     },
     {
-      "id": 8,
+      "id": 13,
       "projetId": 3,
       "titre": "Préparer les packs de services",
       "description": "Définir Start, Standard et Pro.",
@@ -139,7 +254,40 @@
       "modifieLe": "2026-09-11"
     },
     {
-      "id": 9,
+      "id": 14,
+      "projetId": 3,
+      "titre": "Configurer OBS",
+      "description": "Préparer les scènes et les sources vidéo.",
+      "statut": "terminee",
+      "priorite": "haute",
+      "echeance": "2026-09-13",
+      "creeLe": "2026-09-09",
+      "modifieLe": "2026-09-13"
+    },
+    {
+      "id": 15,
+      "projetId": 3,
+      "titre": "Tester la diffusion YouTube",
+      "description": "Effectuer un test complet de streaming.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-19",
+      "creeLe": "2026-09-12",
+      "modifieLe": "2026-09-14"
+    },
+    {
+      "id": 16,
+      "projetId": 3,
+      "titre": "Créer les lower thirds",
+      "description": "Préparer les éléments graphiques pour les directs.",
+      "statut": "a_faire",
+      "priorite": "moyenne",
+      "echeance": "2026-09-23",
+      "creeLe": "2026-09-14",
+      "modifieLe": "2026-09-14"
+    },
+    {
+      "id": 17,
       "projetId": 4,
       "titre": "Créer la maquette Figma",
       "description": "Concevoir l'interface.",
@@ -150,7 +298,7 @@
       "modifieLe": "2026-09-10"
     },
     {
-      "id": 10,
+      "id": 18,
       "projetId": 4,
       "titre": "Développer la page Formations",
       "description": "Afficher les différents modules.",
@@ -161,7 +309,29 @@
       "modifieLe": "2026-09-09"
     },
     {
-      "id": 11,
+      "id": 19,
+      "projetId": 4,
+      "titre": "Ajouter les témoignages",
+      "description": "Créer une section présentant les témoignages.",
+      "statut": "en_cours",
+      "priorite": "moyenne",
+      "echeance": "2026-09-22",
+      "creeLe": "2026-09-12",
+      "modifieLe": "2026-09-13"
+    },
+    {
+      "id": 20,
+      "projetId": 4,
+      "titre": "Optimiser la page Contact",
+      "description": "Améliorer le formulaire et les informations de contact.",
+      "statut": "a_faire",
+      "priorite": "basse",
+      "echeance": "2026-09-26",
+      "creeLe": "2026-09-14",
+      "modifieLe": "2026-09-14"
+    },
+    {
+      "id": 21,
       "projetId": 5,
       "titre": "Ajouter la section Projets",
       "description": "Présenter les réalisations.",
@@ -170,6 +340,215 @@
       "echeance": "2026-09-22",
       "creeLe": "2026-09-10",
       "modifieLe": "2026-09-11"
+    },
+    {
+      "id": 22,
+      "projetId": 5,
+      "titre": "Créer la section À propos",
+      "description": "Présenter le parcours et les compétences.",
+      "statut": "terminee",
+      "priorite": "basse",
+      "echeance": "2026-09-15",
+      "creeLe": "2026-09-11",
+      "modifieLe": "2026-09-15"
+    },
+    {
+      "id": 23,
+      "projetId": 5,
+      "titre": "Ajouter les services",
+      "description": "Présenter les services proposés.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-24",
+      "creeLe": "2026-09-13",
+      "modifieLe": "2026-09-15"
+    },
+    {
+      "id": 24,
+      "projetId": 5,
+      "titre": "Déployer le portfolio",
+      "description": "Mettre le portfolio en production.",
+      "statut": "a_faire",
+      "priorite": "haute",
+      "echeance": "2026-09-28",
+      "creeLe": "2026-09-15",
+      "modifieLe": "2026-09-15"
+    },
+    {
+      "id": 25,
+      "projetId": 6,
+      "titre": "Créer la page des formations",
+      "description": "Lister les formations disponibles.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-20",
+      "creeLe": "2026-09-11",
+      "modifieLe": "2026-09-14"
+    },
+    {
+      "id": 26,
+      "projetId": 6,
+      "titre": "Créer l'inscription utilisateur",
+      "description": "Permettre aux utilisateurs de créer un compte.",
+      "statut": "a_faire",
+      "priorite": "haute",
+      "echeance": "2026-09-23",
+      "creeLe": "2026-09-12",
+      "modifieLe": "2026-09-12"
+    },
+    {
+      "id": 27,
+      "projetId": 6,
+      "titre": "Créer le système d'abonnement",
+      "description": "Gérer les accès aux formations selon l'abonnement.",
+      "statut": "a_faire",
+      "priorite": "haute",
+      "echeance": "2026-09-28",
+      "creeLe": "2026-09-14",
+      "modifieLe": "2026-09-14"
+    },
+    {
+      "id": 28,
+      "projetId": 7,
+      "titre": "Définir la stratégie de contenu",
+      "description": "Préparer le calendrier éditorial.",
+      "statut": "terminee",
+      "priorite": "haute",
+      "echeance": "2026-09-13",
+      "creeLe": "2026-09-10",
+      "modifieLe": "2026-09-13"
+    },
+    {
+      "id": 29,
+      "projetId": 7,
+      "titre": "Créer les visuels sociaux",
+      "description": "Préparer les visuels pour Facebook et Instagram.",
+      "statut": "en_cours",
+      "priorite": "moyenne",
+      "echeance": "2026-09-21",
+      "creeLe": "2026-09-12",
+      "modifieLe": "2026-09-15"
+    },
+    {
+      "id": 30,
+      "projetId": 7,
+      "titre": "Programmer les publications",
+      "description": "Planifier les publications du mois.",
+      "statut": "a_faire",
+      "priorite": "basse",
+      "echeance": "2026-09-25",
+      "creeLe": "2026-09-15",
+      "modifieLe": "2026-09-15"
+    },
+    {
+      "id": 31,
+      "projetId": 8,
+      "titre": "Analyser les besoins utilisateurs",
+      "description": "Identifier les principaux problèmes UX.",
+      "statut": "terminee",
+      "priorite": "haute",
+      "echeance": "2026-09-16",
+      "creeLe": "2026-09-14",
+      "modifieLe": "2026-09-16"
+    },
+    {
+      "id": 32,
+      "projetId": 8,
+      "titre": "Créer les wireframes",
+      "description": "Créer les premières structures des écrans.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-22",
+      "creeLe": "2026-09-15",
+      "modifieLe": "2026-09-16"
+    },
+    {
+      "id": 33,
+      "projetId": 8,
+      "titre": "Créer le design system",
+      "description": "Définir les couleurs, typographies et composants.",
+      "statut": "a_faire",
+      "priorite": "moyenne",
+      "echeance": "2026-09-27",
+      "creeLe": "2026-09-16",
+      "modifieLe": "2026-09-16"
+    },
+    {
+      "id": 34,
+      "projetId": 9,
+      "titre": "Créer la page produits",
+      "description": "Afficher les produits avec leurs informations.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-20",
+      "creeLe": "2026-09-08",
+      "modifieLe": "2026-09-14"
+    },
+    {
+      "id": 35,
+      "projetId": 9,
+      "titre": "Créer le panier",
+      "description": "Permettre aux clients d'ajouter des produits.",
+      "statut": "a_faire",
+      "priorite": "haute",
+      "echeance": "2026-09-24",
+      "creeLe": "2026-09-10",
+      "modifieLe": "2026-09-10"
+    },
+    {
+      "id": 36,
+      "projetId": 10,
+      "titre": "Créer le logo",
+      "description": "Définir la nouvelle identité graphique.",
+      "statut": "terminee",
+      "priorite": "haute",
+      "echeance": "2026-09-12",
+      "creeLe": "2026-09-09",
+      "modifieLe": "2026-09-12"
+    },
+    {
+      "id": 37,
+      "projetId": 10,
+      "titre": "Définir la palette de couleurs",
+      "description": "Créer la palette principale et secondaire.",
+      "statut": "terminee",
+      "priorite": "moyenne",
+      "echeance": "2026-09-14",
+      "creeLe": "2026-09-10",
+      "modifieLe": "2026-09-14"
+    },
+    {
+      "id": 38,
+      "projetId": 10,
+      "titre": "Créer les supports marketing",
+      "description": "Décliner l'identité sur les différents supports.",
+      "statut": "en_cours",
+      "priorite": "moyenne",
+      "echeance": "2026-09-25",
+      "creeLe": "2026-09-14",
+      "modifieLe": "2026-09-16"
+    },
+    {
+      "id": 39,
+      "projetId": 11,
+      "titre": "Créer la gestion des employés",
+      "description": "Ajouter les fonctionnalités CRUD des employés.",
+      "statut": "en_cours",
+      "priorite": "haute",
+      "echeance": "2026-09-21",
+      "creeLe": "2026-09-09",
+      "modifieLe": "2026-09-15"
+    },
+    {
+      "id": 40,
+      "projetId": 11,
+      "titre": "Créer le tableau de bord RH",
+      "description": "Afficher les statistiques principales.",
+      "statut": "a_faire",
+      "priorite": "moyenne",
+      "echeance": "2026-09-26",
+      "creeLe": "2026-09-12",
+      "modifieLe": "2026-09-12"
     }
   ]
 }

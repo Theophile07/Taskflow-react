@@ -1,21 +1,25 @@
-const statuts = [
-  {
-    label: "À faire",
-    value: 25,
-    className: "todo"
-  },
-  {
-    label: "En cours",
-    value: 30,
-    className: "progress"
-  },
-  {
-    label: "Terminées",
-    value: 45,
-    className: "completed"
-  }]
 
-export default function TaskProgressChart() {
+export default function TaskProgressChart({total, termine, enCours, aFaire }) {
+  const calculPourcentage = (valeur) => {
+    if(total === 0) return 0;
+    return Math.round((valeur / total) * 100)
+  }
+  const statuts = [
+    {
+      label: "À faire",
+      value: calculPourcentage(aFaire),
+      className: "todo"
+    },
+    {
+      label: "En cours",
+      value: calculPourcentage(enCours),
+      className: "progress"
+    },
+    {
+      label: "Terminées",
+      value: calculPourcentage(termine),
+      className: "completed"
+    }]
   return (
     <div className="task-chart">
 
