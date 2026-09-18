@@ -65,8 +65,20 @@ export default function Dashboard(){
         (a, b) =>
             new Date(b.creeLe) - new Date(a.creeLe)
         )
-        .slice(0, 5);
-    }, [taches]);
+        .slice(0, 5)
+        .map((taches) => {
+            const projet = projets.find(
+                (projet) => Number(projet.id) === Number(taches.projetId)
+            )
+            return{
+                ...taches,
+                nomProjet: projet? projet.nom
+                :"Projet Inconnu",
+                couleurProjet: projet? projet.couleur
+                :"#64748B",
+            }
+        })
+    }, [taches, projets]);
 
     useEffect(() => {
         async function chargerDashboard() {

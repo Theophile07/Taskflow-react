@@ -1,9 +1,24 @@
-export default function TacheRecente({ titre, projet, priorite, echeance, statut }) {
+const formatStatut = {
+  a_faire: "À faire",
+  en_cours: "En cours",
+  terminee: "Terminée",
+};
+export default function TacheRecente({ titre, nomProjet, couleurProjet, priorite, echeance, statut }) {
   return (
     <tr>
       <td>{titre}</td>
 
-      <td>{projet}</td>
+      <td>
+        <div className="task-project">
+          <span className="project-dot" style={{backgroundColor: couleurProjet}}>
+          </span>
+
+          <span>
+            {nomProjet}
+          </span>
+        </div>
+
+      </td>
 
       <td>
         <span className={`badge badge-priority-${priorite}`}>
@@ -15,7 +30,8 @@ export default function TacheRecente({ titre, projet, priorite, echeance, statut
 
       <td>
         <span className={`badge badge-status-${statut}`}>
-          {statut.replace("_", " ")}
+          {formatStatut[statut] || statut}
+          {/* {statut.replace("_", " ")} */}
         </span>
       </td>
     </tr>
