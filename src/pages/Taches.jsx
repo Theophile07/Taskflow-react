@@ -6,56 +6,28 @@ import {
   CircleCheck,
   AlertCircle,
 } from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 
-import { useEffect, useRef, useState } from "react";
+import { recupererProjet } from "../api/projets";
+import { recupererTache } from "../api/taches";
 
 import TableauTache from "../components/TableauTache";
 import TacheModal from "../components/TacheModal";
 
-const taches = [
-  {
-    id: 1,
-    titre: "Intégrer le formulaire",
-    projet: "Site vitrine Nguvu",
-    priorite: "haute",
-    echeance: "12 Sept. 2026",
-    statut: "en_cours",
-    description: "Créer le formulaire de contact.",
-    creeLe: "02 Sept. 2026",
-    modifieLe: "04 Sept. 2026",
-  },
-  {
-    id: 2,
-    titre: "Créer la page d'accueil",
-    projet: "Portfolio",
-    priorite: "moyenne",
-    echeance: "15 Sept. 2026",
-    statut: "a_faire",
-    description: "Créer le Hero.",
-    creeLe: "05 Sept. 2026",
-    modifieLe: "05 Sept. 2026",
-  },
-  {
-    id: 3,
-    titre: "Corriger les bugs",
-    projet: "TaskFlow",
-    priorite: "basse",
-    echeance: "18 Sept. 2026",
-    statut: "terminee",
-    description: "Corriger les bugs UI.",
-    creeLe: "08 Sept. 2026",
-    modifieLe: "09 Sept. 2026",
-  },
-];
 
-function TacheStatsCard({
-  icon: Icon,
-  value,
-  label,
-  variant,
-}) {
+/* =====================================================
+   CARTE DE STATISTIQUE (TÂCHES)
+===================================================== */
+
+function TacheStatsCard({ icon: Icon, value, label, variant, }) {
   return (
     <div className="task-stat-card">
+
       <div className={`task-stat-icon ${variant}`}>
         <Icon size={22} />
       </div>
@@ -64,18 +36,30 @@ function TacheStatsCard({
         <h3>{value}</h3>
         <p>{label}</p>
       </div>
+
     </div>
   );
 }
 
+
 export default function Taches() {
+
+  /* =====================================================
+     ÉTAT LOCAL
+  ===================================================== */
+
   const [filtreOuvert, setFiltreOuvert] = useState(false);
-
   const [modal, setModal] = useState(null);
-
   const [tacheSelectionnee, setTacheSelectionnee] = useState(null);
-
+  const [taches, setTaches] = useState([]);
+  const [projets, setProjets] = useState([]);
+  const [chargement, setChargement] = useState(true);
   const filtreRef = useRef(null);
+  const [recherche, setRecherche] = useState("");
+
+  /* =====================================================
+     FERMER LE FILTRE EN CLIQUANT À L'EXTÉRIEUR
+  ===================================================== */
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -99,35 +83,135 @@ export default function Taches() {
       );
   }, []);
 
+  /* =====================================================
+     STATISTIQUES DES TÂCHES
+  ===================================================== */
+
+  const tachesAFaire = useMemo(() => {
+    return taches.filter(
+      (tache) => tache.statut === "a_faire"
+    ).length
+  }, [taches])
+
+  const tachesEnCours = useMemo(() => {
+    return taches.filter(
+      (tache) => tache.statut === "en_cours"
+    ).length
+  }, [taches])
+
+  const tachesTerminees = useMemo(() => {
+    return taches.filter(
+      (tache) => tache.statut === "terminee"
+    ).length
+  }, [taches])
+
+  const tachesEnRetard = useMemo(() => {
+    const aujourdHui =
+      new Date().toISOString().split("T")[0];
+
+    return taches.filter(
+      (tache) =>
+        tache.echeance < aujourdHui &&
+        tache.statut !== "terminee"
+    ).length;
+  }, [taches])
+
+  const tachesAvecProjet = useMemo(() => {
+    return taches.map((tache) => {
+      const projet = projets.find(
+        (projet) =>
+          Number(projet.id) ===
+          Number(tache.projetId)
+      );
+
+      return {
+        ...tache,
+        nomProjet: projet?.nom || "Projet inconnu",
+        couleurProjet:
+          projet?.couleur || "#64748B",
+      };
+    });
+  }, [taches, projets]);
+
+    const tachesFiltrees = useMemo(() => {
+      return tachesAvecProjet.filter((tache) => {
+        const mot = recherche.toLowerCase().trim();
+
+        return (
+          tache.titre.toLowerCase().includes(mot) ||
+          tache.nomProjet.toLowerCase().includes(mot)
+        );
+      });
+    }, [tachesAvecProjet, recherche]);
+  /* =====================================================
+     CHARGEMENT DES DONNÉES
+  ===================================================== */
+
+  useEffect(() => {
+    async function chargerTaches() {
+      try {
+        const [projetData, tachesData] =
+          await Promise.all([
+            recupererProjet(),
+            recupererTache(),
+          ])
+        setTaches(tachesData)
+        setProjets(projetData)
+      } catch (error) {
+        console.error("Erreur :", error)
+      } finally {
+        setChargement(false)
+      }
+    }
+    chargerTaches()
+  }, [])
+
+  if (chargement) {
+    return (
+      <p>Chargement des taches...</p>
+    );
+  }
+
+  /* =====================================================
+     RENDU
+  ===================================================== */
+
   return (
     <div className="tasks-page">
+
+      {/* -----------------------------
+          EN-TÊTE
+      ----------------------------- */}
+
       <header className="tasks-header">
+
         <div>
-          <p className="dashboard-eyebrow">
-            Gestion des tâches
-          </p>
-
+          <p className="dashboard-eyebrow"> Gestion des tâches </p>
           <h1>Mes tâches</h1>
-
-          <p>
-            Suivez toutes vos tâches.
-          </p>
+          <p>Suivez toutes vos tâches.</p>
         </div>
 
-        <button
-          className="btn btn-primary"
-          onClick={() =>
-            setModal("nouvelleTache")
-          }
-        >
+        <button className="btn btn-primary"  onClick={() => setModal("nouvelleTache") }>
           + Nouvelle tâche
         </button>
+
       </header>
 
+      {/* -----------------------------
+          BARRE D'OUTILS
+      ----------------------------- */}
+
       <div className="tasks-toolbar">
-        <div className="project-search">
+
+<div className="search-box">
+
           <Search size={18} />
-          <input placeholder="Rechercher une tâche..." />
+
+          <input
+            type="search"
+            placeholder="Rechercher une tâche..."
+          />
+
         </div>
 
         <div
@@ -146,7 +230,9 @@ export default function Taches() {
 
           {filtreOuvert && (
             <div className="filter-popover">
+
               <div className="filter-section">
+
                 <label>Statut</label>
 
                 <select className="select">
@@ -155,74 +241,66 @@ export default function Taches() {
                   <option>En cours</option>
                   <option>Terminées</option>
                 </select>
+
               </div>
+
             </div>
           )}
+
         </div>
+
       </div>
 
+      {/* -----------------------------
+          STATISTIQUES
+      ----------------------------- */}
+
       <section className="tasks-stats-grid">
-        <TacheStatsCard
-          icon={ClipboardList}
-          value={12}
-          label="À faire"
-          variant="todo"
-        />
-
-        <TacheStatsCard
-          icon={Clock}
-          value={5}
-          label="En cours"
-          variant="progress"
-        />
-
-        <TacheStatsCard
-          icon={CircleCheck}
-          value={18}
-          label="Terminées"
-          variant="success"
-        />
-
-        <TacheStatsCard
-          icon={AlertCircle}
-          value={3}
-          label="En retard"
-          variant="danger"
-        />
+        <TacheStatsCard icon={ClipboardList} value={tachesAFaire} label="À faire" variant="todo" />
+        <TacheStatsCard icon={Clock} value={tachesEnCours} label="En cours" variant="progress" />
+        <TacheStatsCard icon={CircleCheck} value={tachesTerminees} label="Terminées" variant="success" />
+        <TacheStatsCard icon={AlertCircle} value={tachesEnRetard} label="En retard" variant="danger" />
       </section>
 
+      {/* -----------------------------
+          LISTE DES TÂCHES
+      ----------------------------- */}
+
       <section className="dashboard-card">
+
         <div className="card-header">
+
           <div>
             <h3>Liste des tâches</h3>
-
-            <p>
-              Cliquez sur une tâche.
-            </p>
+            <p>Cliquez sur une tâche.</p>
           </div>
         </div>
 
-        <TableauTache
-          taches={taches}
-          onOpenTask={setTacheSelectionnee}
-        />
+        <TableauTache taches={tachesFiltrees} onOpenTask={setTacheSelectionnee} />
+
       </section>
+
+      {/* -----------------------------
+          MODALE DE TÂCHE
+      ----------------------------- */}
 
       <TacheModal
         tache={tacheSelectionnee}
         projet={{
-          nom: tacheSelectionnee?.projet,
+          nom: tacheSelectionnee?.nomProjet,
+          couleur: tacheSelectionnee?.couleurProjet,
         }}
         onClose={() =>
           setTacheSelectionnee(null)
         }
-        onModifier={(t) =>
-          console.log("Modifier", t)
+        onModifier={(tache) =>
+          console.log("Modifier", tache)
         }
-        onSupprimer={(t) =>
-          console.log("Supprimer", t)
+        onSupprimer={(tache) =>
+          console.log("Supprimer", tache)
         }
       />
+
     </div>
   );
 }

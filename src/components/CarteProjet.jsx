@@ -2,11 +2,13 @@ import { MoreVertical, CheckSquare, Clock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function CarteProjet({ projet, taches = [], onOuvrir, onModifier, onSupprimer }) {
-  console.log(projet.nom, taches)
   const [menuOuvert, setMenuOuvert] = useState(false);
   const menuRef = useRef(null);
 
-  const { nom, description, couleur, totalTaches, tachesEnCours, echeance } = projet;
+  const { nom, couleur, nombreTaches } = projet;
+  const tachesEnCours = taches.filter(
+    (tache) => tache.statut === "en_cours"
+  ).length;
 
   /* =====================================================
      FERMER LE MENU EN CLIQUANT À L'EXTÉRIEUR
@@ -46,6 +48,7 @@ export default function CarteProjet({ projet, taches = [], onOuvrir, onModifier,
       action(projet);
     }
   }
+
   function calculProgress(taches){
     if(taches.length === 0){
       return 0
@@ -53,7 +56,7 @@ export default function CarteProjet({ projet, taches = [], onOuvrir, onModifier,
     const tacheTerminees = taches.filter(
       (tache) => tache.statut === "terminee"
     )
-    return Math.round(tacheTerminees.length / taches.length) * 100
+    return Math.round((tacheTerminees.length / taches.length) * 100)
   }
   const progression = calculProgress(taches)
 
@@ -75,7 +78,7 @@ export default function CarteProjet({ projet, taches = [], onOuvrir, onModifier,
             }}
           ></span>
 
-          <h3>{nom}</h3>
+          <h3>{projet.nom}</h3>
 
         </div>
 
@@ -134,7 +137,7 @@ export default function CarteProjet({ projet, taches = [], onOuvrir, onModifier,
       ================================================= */}
 
       <p className="project-card-description">
-        {description}
+        {projet.description}
       </p>
 
       {/* =================================================
@@ -161,7 +164,7 @@ export default function CarteProjet({ projet, taches = [], onOuvrir, onModifier,
             className="project-progress-fill"
             style={{
               width: `${progression}%`,
-              backgroundColor: couleur
+              backgroundColor: projet.couleur
             }}
           ></div>
 
@@ -177,29 +180,13 @@ export default function CarteProjet({ projet, taches = [], onOuvrir, onModifier,
 
         <span>
           <CheckSquare size={16} />
-          {totalTaches} tâches
+          {nombreTaches} tâches
         </span>
 
         <span>
           <Clock size={16} />
           {tachesEnCours} en cours
         </span>
-
-      </div>
-
-      {/* =================================================
-          FOOTER
-      ================================================= */}
-
-      <div className="project-card-footer">
-
-        <span>
-          Échéance
-        </span>
-
-        <strong>
-          {echeance}
-        </strong>
 
       </div>
 

@@ -1,38 +1,50 @@
-import { Plus, Search, SlidersHorizontal, FolderKanban } from "lucide-react";
+import {
+  Plus,
+  Search,
+  SlidersHorizontal,
+  FolderKanban,
+} from "lucide-react";
 
-import { useMemo, useState, useEffect } from "react";
-import { recupererProjet } from "../api/projets"
-import { recupererTache } from "../api/taches"
+import {
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
+
+import { recupererProjet } from "../api/projets";
+import { recupererTache } from "../api/taches";
 
 import CarteProjet from "../components/CarteProjet";
 import Modals from "../components/Modals";
 
+
 export default function Projets() {
 
-  const [projets, setProjets] = useState([])
-  const [chargement, setChargement] = useState(true)
-  const [taches, setTaches] = useState([])
   /* =====================================================
-     RECHERCHE
+     ÉTAT LOCAL
   ===================================================== */
+
+  const [projets, setProjets] = useState([]);
+  const [taches, setTaches] = useState([]);
+  const [chargement, setChargement] = useState(true);
+
+  /* --- Recherche --- */
 
   const [recherche, setRecherche] = useState("");
 
-  /* =====================================================
-     FILTRE
-  ===================================================== */
+  /* --- Filtre --- */
 
   const [filtre, setFiltre] = useState("tous");
-//  TRI
+
+  /* --- Tri --- */
+
   const [tri, setTri] = useState("recent");
 
-  /* =====================================================
-     MODALES
-  ===================================================== */
+  /* --- Modales --- */
 
   const [modal, setModal] = useState(null);
-
-  const [ projetSelectionne, setProjetSelectionne ] = useState(null);
+  const [projetSelectionne, setProjetSelectionne]
+    = useState(null);
 
   /* =====================================================
      OUVRIR UN PROJET
@@ -71,12 +83,47 @@ export default function Projets() {
   }
 
   /* =====================================================
+     PROGRESSION DES PROJETS
+  ===================================================== */
+
+  const projetProgression = useMemo(() => {
+    return projets.map((projet) => {
+
+      const tachesProjets = taches.filter(
+        (tache) =>
+          Number(tache.projetId) ===
+          Number(projet.id)
+      )
+
+      const terminees = tachesProjets.filter(
+        (tache) =>
+          tache.statut === "terminee"
+      ).length
+
+      const progression =
+        tachesProjets.length === 0
+          ? 0
+          : Math.round(
+              (terminees / tachesProjets.length) * 100
+            )
+
+      return {
+        ...projet,
+        progression,
+        nombreTaches: tachesProjets.length,
+        tachesProjets,
+      }
+
+    })
+  }, [projets, taches])
+
+  /* =====================================================
      FILTRAGE + RECHERCHE + TRI
   ===================================================== */
 
   const projetsFiltres = useMemo(() => {
 
-    let resultat = [...projets];
+    let resultat = [...projetProgression];
 
     /* -----------------------------
        RECHERCHE
@@ -117,7 +164,6 @@ export default function Projets() {
     }
 
     if (filtre === "en_retard") {
-
       const aujourdHui =
         new Date()
           .toISOString()
@@ -165,41 +211,59 @@ export default function Projets() {
     }
 
     return resultat;
+
   }, [projets, recherche, filtre, tri]);
 
+  /* =====================================================
+     CHARGEMENT DES DONNÉES
+  ===================================================== */
 
   useEffect(() => {
-      async function chargerProjets() {
-        try{
-          const projetData = await recupererProjet()
-          const tachesData = await recupererTache()
-
-          setProjets(projetData)
-          setTaches(tachesData)
-        }catch (error){
-          console.error("Erreur :", error)
-        }finally{
-          setChargement(false)
-        }
+    async function chargerProjets() {
+      try {
+        const [projetData, tachesData] =
+          await Promise.all([
+            recupererProjet(),
+            recupererTache(),
+          ])
+        setProjets(projetData)
+        setTaches(tachesData)
+      } catch (error) {
+        console.error("Erreur :", error)
+      } finally {
+        setChargement(false)
       }
-      chargerProjets()
-    }, [])
-    if(chargement){
-      return <p>Chargement des projets...</p>
     }
+    chargerProjets()
+  }, [])
+
+  if (chargement) {
+    return (
+      <p>Chargement des projets...</p>
+    );
+  }
 
   /* =====================================================
      RENDU
   ===================================================== */
-    
-    
+
   return (
     <div className="page">
+
+      {/* -----------------------------
+          EN-TÊTE
+      ----------------------------- */}
+
       <div className="page-header">
 
         <div>
-          <h1> Mes projets </h1>
-          <p> Gérez et suivez l'avancement de vos projets. </p>
+
+          <h1>Mes projets</h1>
+
+          <p>
+            Gérez et suivez l'avancement de vos projets.
+          </p>
+
         </div>
 
         <button
@@ -215,9 +279,9 @@ export default function Projets() {
 
       </div>
 
-      {/* =================================================
-          BARRE OUTILS
-      ================================================= */}
+      {/* -----------------------------
+          BARRE D'OUTILS
+      ----------------------------- */}
 
       <div className="projects-toolbar">
 
@@ -232,9 +296,7 @@ export default function Projets() {
             placeholder="Rechercher un projet..."
             value={recherche}
             onChange={(event) =>
-              setRecherche(
-                event.target.value
-              )
+              setRecherche(event.target.value)
             }
           />
 
@@ -249,15 +311,21 @@ export default function Projets() {
           <select
             value={filtre}
             onChange={(event) =>
-              setFiltre(
-                event.target.value
-              )
+              setFiltre(event.target.value)
             }
-            >
-            <option value="tous"> Tous les projets </option>
-            <option value="en_cours"> En cours </option>
-            <option value="termine"> Terminés </option>
-            <option value="en_retard"> En retard </option>
+          >
+            <option value="tous">
+              Tous les projets
+            </option>
+            <option value="en_cours">
+              En cours
+            </option>
+            <option value="termine">
+              Terminés
+            </option>
+            <option value="en_retard">
+              En retard
+            </option>
           </select>
 
         </div>
@@ -269,9 +337,7 @@ export default function Projets() {
           <select
             value={tri}
             onChange={(event) =>
-              setTri(
-                event.target.value
-              )
+              setTri(event.target.value)
             }
           >
             <option value="recent">
@@ -295,9 +361,9 @@ export default function Projets() {
 
       </div>
 
-      {/* =================================================
+      {/* -----------------------------
           NOMBRE DE PROJETS
-      ================================================= */}
+      ----------------------------- */}
 
       <div className="projects-result-info">
 
@@ -310,40 +376,52 @@ export default function Projets() {
 
       </div>
 
-      {/* =================================================
+      {/* -----------------------------
           LISTE DES PROJETS
-      ================================================= */}
+      ----------------------------- */}
 
       {projetsFiltres.length > 0 ? (
 
         <div className="projects-grid">
 
           {projetsFiltres.map((projet) => {
+
             const tachesProjets = taches.filter(
-              (tache) => tache.projetId === projet.id
+              (tache) =>
+                tache.projetId === projet.id
             )
-            return(
+
+            const projetProgression =
+              tachesProjets.length === 0
+                ? 0
+                : Math.round(
+                    (tachesProjets.filter(
+                      (tache) =>
+                        tache.statut === "terminee"
+                    ).length / tachesProjets.length) * 100
+                  )
+
+            return (
               <CarteProjet
                 key={projet.id}
                 projet={projet}
-                taches={tachesProjets}
+                progression={projetProgression}
+                taches={projet.tachesProjets}
                 onOuvrir={handleOuvrir}
                 onModifier={handleModifier}
-                onSupprimer={
-                  handleSupprimer
-                }
+                onSupprimer={handleSupprimer}
               />
             )
-          }
-          )}
+
+          })}
 
         </div>
 
       ) : (
 
-        /* =================================================
-           AUCUN RÉSULTAT
-        ================================================= */
+        /* -----------------------------
+            AUCUN RÉSULTAT
+        ----------------------------- */
 
         <div className="empty-state">
 
@@ -351,9 +429,7 @@ export default function Projets() {
             <FolderKanban size={28} />
           </div>
 
-          <h3>
-            Aucun projet trouvé
-          </h3>
+          <h3>Aucun projet trouvé</h3>
 
           <p>
             Aucun projet ne correspond à
@@ -376,12 +452,16 @@ export default function Projets() {
 
       )}
 
-      {/* =================================================
+      {/* -----------------------------
           MODALES
-      ================================================= */}
+      ----------------------------- */}
 
       <Modals
-        key={modal === "modifierProjet" ? `modif-${projetSelectionne?.id ?? ""}` : modal ?? "none"}
+        key={
+          modal === "modifierProjet"
+            ? `modif-${projetSelectionne?.id ?? ""}`
+            : modal ?? "none"
+        }
         modal={modal}
         onClose={fermerModal}
         projets={projets}

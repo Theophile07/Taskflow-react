@@ -1,10 +1,18 @@
 import { MoreVertical } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-function LigneTache({
-  tache,
-  onOpenTask,
-}) {
+function LigneTache({tache, onOpenTask,}) {
+  const statuts = {
+    a_faire: "À faire",
+    en_cours: "En cours",
+    terminee: "Terminée",
+  };
+
+  const priorites = {
+    haute: "Haute",
+    moyenne: "Moyenne",
+    basse: "Basse",
+  };
   const [menuOuvert, setMenuOuvert] = useState(false);
 
   const menuRef = useRef(null);
@@ -40,13 +48,18 @@ function LigneTache({
         <strong>{tache.titre}</strong>
       </td>
 
-      <td>{tache.projet}</td>
+      <td>
+        <div className="task-project">
+          <span className="project-dot" style={{ backgroundColor: tache.couleurProjet }}></span>
+          <span>{tache.nomProjet}</span>
+        </div>
+      </td>
 
       <td>
         <span
           className={`badge badge-priority-${tache.priorite}`}
         >
-          {tache.priorite}
+          {priorites[tache.priorite]}
         </span>
       </td>
 
@@ -56,7 +69,7 @@ function LigneTache({
         <span
           className={`badge badge-status-${tache.statut}`}
         >
-          {tache.statut.replace("_", " ")}
+          {statuts[tache.statut]}
         </span>
       </td>
 
@@ -99,10 +112,7 @@ function LigneTache({
   );
 }
 
-export default function TableauTache({
-  taches,
-  onOpenTask,
-}) {
+export default function TableauTache({ taches, onOpenTask }) {
   return (
     <div className="table-wrapper">
       <table className="table task-table">

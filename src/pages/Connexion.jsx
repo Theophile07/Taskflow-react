@@ -1,25 +1,46 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { LockKeyhole, Mail, Eye, EyeOff } from "lucide-react";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+import {
+  LockKeyhole,
+  Mail,
+  Eye,
+  EyeOff,
+} from "lucide-react";
+
 import { useAuth } from "../context/AuthContext";
 
+
 export default function Connexion() {
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  /* =====================================================
+     ÉTAT LOCAL
+  ===================================================== */
+
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
-  const [afficherMotDePasse, setAfficherMotDePasse] = useState(false);
+  const [afficherMotDePasse, setAfficherMotDePasse]
+    = useState(false);
   const [erreur, setErreur] = useState("");
   const [chargement, setChargement] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  /* =====================================================
+     SOUMMISSION DU FORMULAIRE
+  ===================================================== */
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     setErreur("");
     setChargement(true);
 
     try {
+
       const response = await fetch(
         `http://localhost:3000/utilisateurs?email=${encodeURIComponent(email)}`
       );
@@ -31,7 +52,8 @@ export default function Connexion() {
       const utilisateurs = await response.json();
 
       const utilisateur = utilisateurs.find(
-        (user) => user.motDePasse === motDePasse
+        (user) =>
+          user.motDePasse === motDePasse
       );
 
       if (!utilisateur) {
@@ -41,44 +63,91 @@ export default function Connexion() {
 
       login(utilisateur);
       navigate("/dashboard");
+
     } catch (error) {
-      setErreur("Impossible de se connecter. Vérifie que json-server fonctionne.");
+      setErreur(
+        "Impossible de se connecter. Vérifie que json-server fonctionne."
+      );
     } finally {
       setChargement(false);
     }
   };
 
+  /* =====================================================
+     RENDU
+  ===================================================== */
+
   return (
+
     <div className="auth-page">
+
+      {/* -----------------------------
+          MARQUE / PRÉSENTATION
+      ----------------------------- */}
+
       <div className="auth-brand">
+
         <div className="auth-brand-content">
+
           <div className="auth-brand-logo">
+
             <div className="logo-icon">T</div>
+
             <strong>TaskFlow</strong>
+
           </div>
 
-          <h1>Organisez vos projets. Avancez plus vite.</h1>
+          <h1>
+            Organisez vos projets. Avancez plus vite.
+          </h1>
 
           <p>
-            Centralisez vos projets, vos tâches et votre progression dans un
-            espace simple et efficace.
+            Centralisez vos projets, vos tâches et
+            votre progression dans un espace simple
+            et efficace.
           </p>
+
         </div>
+
       </div>
 
+      {/* -----------------------------
+          FORMULAIRE DE CONNEXION
+      ----------------------------- */}
+
       <div className="auth-form-wrapper">
-        <form className="auth-form" onSubmit={handleSubmit}>
+
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
+
           <div className="auth-form-header">
+
             <h2>Bon retour 👋</h2>
-            <p>Connectez-vous à votre compte TaskFlow.</p>
+
+            <p>
+              Connectez-vous à votre compte TaskFlow.
+            </p>
+
           </div>
 
-          {erreur && <div className="auth-error">{erreur}</div>}
+          {erreur && (
+            <div className="auth-error">
+              {erreur}
+            </div>
+          )}
+
+          {/* EMAIL */}
 
           <div className="form-group">
-            <label htmlFor="email">Adresse email</label>
+
+            <label htmlFor="email">
+              Adresse email
+            </label>
 
             <div className="auth-input-wrapper">
+
               <Mail size={18} />
 
               <input
@@ -86,24 +155,40 @@ export default function Connexion() {
                 type="email"
                 placeholder="exemple@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(event) =>
+                  setEmail(event.target.value)
+                }
                 required
               />
+
             </div>
+
           </div>
 
+          {/* MOT DE PASSE */}
+
           <div className="form-group">
-            <label htmlFor="motDePasse">Mot de passe</label>
+
+            <label htmlFor="motDePasse">
+              Mot de passe
+            </label>
 
             <div className="auth-input-wrapper">
+
               <LockKeyhole size={18} />
 
               <input
                 id="motDePasse"
-                type={afficherMotDePasse ? "text" : "password"}
+                type={
+                  afficherMotDePasse
+                    ? "text"
+                    : "password"
+                }
                 placeholder="Votre mot de passe"
                 value={motDePasse}
-                onChange={(e) => setMotDePasse(e.target.value)}
+                onChange={(event) =>
+                  setMotDePasse(event.target.value)
+                }
                 required
               />
 
@@ -111,7 +196,9 @@ export default function Connexion() {
                 type="button"
                 className="auth-password-toggle"
                 onClick={() =>
-                  setAfficherMotDePasse(!afficherMotDePasse)
+                  setAfficherMotDePasse(
+                    !afficherMotDePasse
+                  )
                 }
                 aria-label={
                   afficherMotDePasse
@@ -125,7 +212,9 @@ export default function Connexion() {
                   <Eye size={18} />
                 )}
               </button>
+
             </div>
+
           </div>
 
           <button
@@ -133,7 +222,9 @@ export default function Connexion() {
             className="btn btn-primary btn-lg w-full"
             disabled={chargement}
           >
-            {chargement ? "Connexion..." : "Se connecter"}
+            {chargement
+              ? "Connexion..."
+              : "Se connecter"}
           </button>
 
           <p className="auth-footer">
@@ -142,8 +233,12 @@ export default function Connexion() {
               Créer un compte
             </Link>
           </p>
+
         </form>
+
       </div>
+
     </div>
+
   );
 }
